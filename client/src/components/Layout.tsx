@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar.tsx";
 import { MenuIcon } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
