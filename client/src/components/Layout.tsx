@@ -42,11 +42,10 @@ const Layout = () => {
               Manage and automated your social Presence
             </p>
           </div>
-
-          <main className="flex-1 p-6">
-            <Outlet />
-          </main>
         </header>
+        <main className="flex-1 overflow-y-auto p-6">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
