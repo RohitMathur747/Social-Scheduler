@@ -2,6 +2,7 @@ import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { dummyAccountsData, PLATFORMS } from "../assets/assets";
 import AccountList from "../components/AccountList";
+import PlatformPickerModel from "../components/PlatformPickerModel";
 
 const Account = () => {
   const [accounts, setAccounts] = useState<any[]>([]);
@@ -14,12 +15,21 @@ const Account = () => {
     successMsg?: string,
   ) => {
     setAccounts(dummyAccountsData);
-    console.log(isSync, platform, successMsg);
+    if (isSync) console.log("Sync:", { isSync, platform, successMsg });
   };
 
   useEffect(() => {
     fetchAccounts();
   }, []);
+
+  const handleConnect = async (platformId: string) => {
+    setConnecting(platformId);
+    setTimeout(() => {
+      setConnecting(null);
+      setAccounts((prev) => [...prev, dummyAccountsData[0]]);
+      setShowPaltformPicker(false);
+    }, 1000);
+  };
 
   const handleDisconnect = async (accountId: string) => {
     setAccounts(accounts.filter((a) => a.id !== accountId));
@@ -48,6 +58,14 @@ const Account = () => {
       </div>
 
       {/* Platform Picker Modal */}
+      {showPlatformPicker && (
+        <PlatformPickerModel
+          connectedIds={connectedIds}
+          connecting={connecting}
+          onClose={() => setShowPaltformPicker(false)}
+          onConnect={handleConnect}
+        />
+      )}
 
       {/* Connected accounts List */}
       <AccountList accounts={accounts} onDisconnect={handleDisconnect} />
