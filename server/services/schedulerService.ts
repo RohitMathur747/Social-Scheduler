@@ -1,6 +1,7 @@
 import cron from "node-cron";
 import { Post } from "../models/Post.js";
-import { Account } from "../models/Account.js";
+import { Account } from "../models/Account.ts";
+import { zernio } from "../config/zernio.js";
 
 export const initScheduler = () => {
   // Schedule a task to run every minute
@@ -25,8 +26,63 @@ export const initScheduler = () => {
             );
             continue;
           }
-        } catch (error) {}
+
+          const zernioplatform = accounts.map((acc) => ({
+            tform: acc.platform as any,
+            accountId: acc.zernioAccountId!,
+          }));
+
+          const payload = {
+            content: post.content,
+            publishNow: true,
+            ...(post.mediaUrl
+              ? {
+                  mediaItems: [
+                    { type: post.mediaType || "image", url: post.mediaUrl },
+                  ],
+                }
+              : {}),
+            platforms: zernioplatform,
+          };
+          console.log(
+            `Publishing post ${post._id} to zernio with media ${post.mediaUrl || "none"}`,
+          );
+          const response = await zernio.posts.createPost({
+            body: payload,
+          });
+
+          const publishedPost = (response.data as any)?.post || response.data;
+          if (!publishedPost) {
+            throw new Error("No post returned from zernio");
+          }
+          console.log(`Post ${post._id} published successfully to zernio with id 
+            ${publishedPost.id}`);
+          await post.save();
+
+          await ActivityLog.create({
+            user: post.user,
+            actionType: "post_published",
+            description: `published post to ${accounts
+              .map((acc) => acc.platform)
+              .join(",")}`,
+            relatedPost: post._id,
+          });
+        } catch (err: any) {
+          console.error(
+            `Failed to publish post ${post._id} to zernio: ${err.message}`,
+          );
+          post.status = "failed";
+          await post.save();
+        }
       }
-    } catch (error) {}
+      if (postsToPublish.length > 0) {
+        console.log(
+          `Published ${postsToPublish.length} posts to zernio at ${now.toISOString()}`,
+        );
+      }
+    } catch (error) {
+      console.error("Error in scheduled task:", error);
+    }
   });
+  console.log("Scheduler initialized and running every minute.");
 };
