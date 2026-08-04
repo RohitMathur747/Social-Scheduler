@@ -1,7 +1,8 @@
 import cron from "node-cron";
 import { Post } from "../models/Post.js";
-import { Account } from "../models/Account.ts";
-import { zernio } from "../config/zernio.js";
+import { Account } from "../models/account.js";
+import zernio from "../config/zernio.js";
+import { ActivityLog } from "../models/activity.js";
 
 export const initScheduler = () => {
   // Schedule a task to run every minute
