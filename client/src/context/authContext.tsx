@@ -64,14 +64,13 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     delete api.defaults.headers.common["Authorization"];
   };
 
- return(
-    <AuthContext.Provider
-      value={{ user, token, isLoading, login, logout, isAuthenticated:!!token }}
-    >
+  const isAuthenticated = (): boolean => !!token;
+
+  return (
+    <AuthContext.Provider value={{ user, token, isLoading, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
- )
 };
 
 export const useAuth = () => {

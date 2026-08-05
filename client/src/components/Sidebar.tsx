@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "../context/authContext.tsx";
 
 const Sidebar = ({
   isOpen,
@@ -16,15 +17,7 @@ const Sidebar = ({
   isOpen: boolean;
   setIsOpen: (val: boolean) => void;
 }) => {
-  const { logout, user } = {
-    logout: () => {
-      window.location.href = "/";
-    },
-    user: {
-      name: "rohit m",
-      email: "rohit@gmail.com",
-    },
-  };
+  const { logout, user } = useAuth();
 
   const location = useLocation();
 
