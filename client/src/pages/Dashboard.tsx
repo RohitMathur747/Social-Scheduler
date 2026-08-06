@@ -4,7 +4,6 @@ import {
   Clock1Icon,
   SendIcon,
   Share2Icon,
-  TrendingUp,
   TrendingUpIcon,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -13,8 +12,10 @@ import {
   dummyActivityData,
   dummyPostsData,
 } from "../assets/assets";
+import { useAuth } from "../context/authContext.tsx";
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     scheduled: 0,
     published: 0,
@@ -70,11 +71,18 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       {/* welcome */}
-      <div>
-        <h2 className="text-2xl text-slate-900">Good Morning</h2>
-        <p className="text-slate-500 text-sm mt-0.5">
-          Here's whats happening with your social accounts today.
-        </p>
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 flex items-center gap-4">
+        <div className="size-12 rounded-full bg-linear-to-br from-red-400 to-pink-400 flex items-center justify-center text-white text-lg font-semibold shrink-0">
+          {user?.name?.charAt(0).toUpperCase() || "U"}
+        </div>
+        <div className="flex-1 min-w-0">
+          <h2 className="text-2xl text-slate-900">
+            Good Morning, {user?.name || "there"}
+          </h2>
+          <p className="text-slate-500 text-sm mt-0.5 truncate">
+            {user?.email}
+          </p>
+        </div>
       </div>
 
       {/* Stat cards */}

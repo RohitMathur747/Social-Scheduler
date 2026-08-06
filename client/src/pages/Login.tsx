@@ -23,7 +23,7 @@ export default function Login() {
         `/api/auth/${loginState ? "login" : "register"}`,
         { name, email, password },
       );
-      login(data.user, data.token);
+      login({ _id: data._id, name: data.name, email: data.email }, data.token);
       navigate("/dashboard");
     } catch (error: any) {
       toast.error(

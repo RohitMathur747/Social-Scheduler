@@ -1,13 +1,12 @@
 import {
   Calendar1Icon,
   LayoutDashboardIcon,
-  LogOut,
   LogOutIcon,
   UsersIcon,
   Wand2Icon,
 } from "lucide-react";
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext.tsx";
 
 const Sidebar = ({
@@ -20,6 +19,7 @@ const Sidebar = ({
   const { logout, user } = useAuth();
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Dashboard", icon: LayoutDashboardIcon, path: "/dashboard" },
@@ -91,7 +91,10 @@ const Sidebar = ({
       </div>
 
       <button
-        onClick={logout}
+        onClick={() => {
+          logout();
+          navigate("/login");
+        }}
         className="mt-1 flex items-center gap-2 px-3 py-2 w-full rounded text-sm text-slate-500 hover:bg-red-50 hover:text-red-500 transition-all duration-150"
       >
         <LogOutIcon className="size-4" />
