@@ -23,7 +23,7 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const [postsRes, accountsRes, activityRes] = await Promise.all([
-          api.get("/api/post"),
+          api.get("/api/posts"),
           api.get("/api/accounts"),
           api.get("/api/activity"),
         ]);
