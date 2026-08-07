@@ -196,7 +196,7 @@ export const scheduledPosts = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { content, platforms, schedulerFor, status } = req.body;
+    const { content, platforms, scheduledFor, status } = req.body;
 
     let parsedPlatforms = platforms;
     if (typeof platforms === "string") {
@@ -233,12 +233,12 @@ export const scheduledPosts = async (
     }
 
     const post = await Generation.create({
-      userId: req.user._id,
+      user: req.user._id,
       content,
       mediaUrl,
       mediaType,
       platforms: parsedPlatforms,
-      schedulerFor,
+      scheduledFor,
       status,
     });
     res.json({ post });
